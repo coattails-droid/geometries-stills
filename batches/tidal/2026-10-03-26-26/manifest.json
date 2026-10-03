@@ -1,0 +1,24 @@
+{
+  "series": "tidal",
+  "name": "Tidal Geometries",
+  "contract": "0x9F4b042cD0D2B4B93a2b78bDa8862a2473A3485d",
+  "setter": "setTokenImages(uint256[],string[])",
+  "safe": "0x851294C9bdb242Ea0448FBb9083Fd7757E4265E9",
+  "ids": [
+    26
+  ],
+  "folder": "tidal-stills-26-26",
+  "folder_cid": "bafybeigxzwetthjniyki6bqnblsko5jdfsphuz6wpbeuohpgysvvi3bw3a",
+  "uri_example": "https://gateway.pinata.cloud/ipfs/bafybeigxzwetthjniyki6bqnblsko5jdfsphuz6wpbeuohpgysvvi3bw3a/26.png",
+  "file_cids": {
+    "26.png": "bafybeibpy3wwns3e3ul34mlk6x6uwrwzuwdd2jisq3pjxxomzd47dsmkdq",
+    "<root>": "bafybeigxzwetthjniyki6bqnblsko5jdfsphuz6wpbeuohpgysvvi3bw3a"
+  },
+  "date": "2026-10-03",
+  "created_utc": "2026-10-03T18:57:10Z",
+  "block": "26113744",
+  "still": "loop rest frame (phase 0 of the 8 s loop), 1000x1000, same as the set on-chain for #1-#25",
+  "chrome": "Google Chrome 154.0.8037.57 ",
+  "kubo": "0.38.1",
+  "run": "https://github.com/coattails-droid/geometries-stills/actions/runs/37146055705"
+}
