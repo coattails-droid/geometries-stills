@@ -79,9 +79,20 @@ jobs:
 
       - uses: foundry-rs/foundry-toolchain@v1
 
+      - name: Chrome (runner's Google Chrome; installs Chrome for Testing if the image ever drops it)
+        run: |
+          if ! [ -x "$CHROME_PATH" ]; then
+            npx --yes @puppeteer/browsers install chrome@stable --path "$RUNNER_TEMP/chrome" | tee "$RUNNER_TEMP/chrome.txt"
+            echo "CHROME_PATH=$(awk '{print $2}' "$RUNNER_TEMP/chrome.txt" | tail -1)" >> "$GITHUB_ENV"
+          fi
+
       - name: Install kubo (ipfs) ${{ env.KUBO_VERSION }}
         run: |
-          curl -fsSL "https://dist.ipfs.tech/kubo/${KUBO_VERSION}/kubo_${KUBO_VERSION}_linux-amd64.tar.gz" | tar -xz -C "$RUNNER_TEMP"
+          f="kubo_${KUBO_VERSION}_linux-amd64.tar.gz"; cd "$RUNNER_TEMP"
+          for base in "https://github.com/ipfs/kubo/releases/download/${KUBO_VERSION}" "https://dist.ipfs.tech/kubo/${KUBO_VERSION}"; do
+            curl -fsSL --retry 3 --connect-timeout 20 -o "$f" "$base/$f" && curl -fsSL --retry 3 --connect-timeout 20 -o "$f.sha512" "$base/$f.sha512" && break
+          done
+          sha512sum -c "$f.sha512"; tar -xzf "$f"
           echo "$RUNNER_TEMP/kubo" >> "$GITHUB_PATH"
           echo "IPFS_PATH=$RUNNER_TEMP/ipfs-repo" >> "$GITHUB_ENV"
           IPFS_PATH="$RUNNER_TEMP/ipfs-repo" "$RUNNER_TEMP/kubo/ipfs" init --empty-repo >/dev/null
