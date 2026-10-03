@@ -4,14 +4,16 @@ from PIL import Image, ImageDraw, ImageFont
 d, out, name, note = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else ''
 ids = sorted(int(f[:-4]) for f in os.listdir(d) if f.endswith('.png') and f[:-4].isdigit())
 n = len(ids); cols = min(n, 2 if n <= 4 else 4 if n <= 16 else 5); rows = math.ceil(n / cols)
-T = 480 if n <= 4 else 320 if n <= 16 else 240; PAD, CAP, HEAD = 12, 28, 40
+T = 480 if n <= 4 else 320 if n <= 16 else 240; PAD, CAP, HEAD = 12, 28, 58
 def font(sz):
     for f in ['/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', '/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf']:
         if os.path.exists(f): return ImageFont.truetype(f, sz)
     return ImageFont.load_default(size=sz)
 W = cols * T + (cols + 1) * PAD; H = HEAD + rows * (T + CAP) + PAD
 sheet = Image.new('RGB', (W, H), (24, 24, 24)); dr = ImageDraw.Draw(sheet)
-dr.text((PAD, 12), f'{name} #{ids[0]}–#{ids[-1]} ({n} still{"s" if n != 1 else ""}) — {note}', fill=(235, 235, 235), font=font(15))
+rng = f'#{ids[0]}' if n == 1 else f'#{ids[0]}–#{ids[-1]}'
+dr.text((PAD, 10), f'{name} {rng}  ({n} still{"s" if n != 1 else ""})', fill=(235, 235, 235), font=font(15))
+dr.text((PAD, 32), note, fill=(170, 170, 170), font=font(12))
 for i, tid in enumerate(ids):
     im = Image.open(os.path.join(d, f'{tid}.png')).convert('RGB'); w, h = im.size
     x = PAD + (i % cols) * (T + PAD); y = HEAD + (i // cols) * (T + CAP)
