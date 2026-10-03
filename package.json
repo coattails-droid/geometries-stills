@@ -1,0 +1,9 @@
+{
+  "name": "geometries-stills",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Renders preview stills for new Touring / Seeded / Tidal Geometries mints",
+  "dependencies": {
+    "puppeteer-core": "25.12.0"
+  }
+}

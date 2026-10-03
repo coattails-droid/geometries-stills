@@ -1,0 +1,35 @@
+{
+  "touring": {
+    "name": "Touring Geometries",
+    "contract": "0x68488544434fd5c5a23198E5Ca15a3B7e8F2702C",
+    "setter": "setTokenImage(uint256[],string[])",
+    "missing_check": "tokenImage-empty",
+    "uri_prefix": "ipfs://",
+    "folder_prefix": "touring-stills",
+    "label": "touring-stills",
+    "capture": { "mode": "perfnow", "canvas_id": "tg", "time_ms": 0, "size": 1000 },
+    "still_note": "loop time t = 0 s (frame 0 of the 16 s / 30 fps loop), 1000x1000, composited on black"
+  },
+  "seeded": {
+    "name": "Seeded Geometries",
+    "contract": "0xf8b604CC9108bAd6cC306B0a9F207CFb477562A7",
+    "setter": "setTokenImages(uint256[],string[])",
+    "missing_check": "tokenURI-placeholder",
+    "uri_prefix": "https://gateway.pinata.cloud/ipfs/",
+    "folder_prefix": "seeded-stills",
+    "label": "seeded-stills",
+    "capture": { "mode": "raf", "canvas_id": "stage", "time_ms": 0, "size": 1000 },
+    "still_note": "loop rest frame (phase 0 of the 8 s loop), 1000x1000, same as the set on-chain for #1-#10"
+  },
+  "tidal": {
+    "name": "Tidal Geometries",
+    "contract": "0x9F4b042cD0D2B4B93a2b78bDa8862a2473A3485d",
+    "setter": "setTokenImages(uint256[],string[])",
+    "missing_check": "tokenURI-placeholder",
+    "uri_prefix": "https://gateway.pinata.cloud/ipfs/",
+    "folder_prefix": "tidal-stills",
+    "label": "tidal-stills",
+    "capture": { "mode": "raf", "canvas_id": "stage", "time_ms": 0, "size": 1000 },
+    "still_note": "loop rest frame (phase 0 of the 8 s loop), 1000x1000, same as the set on-chain for #1-#25"
+  }
+}
