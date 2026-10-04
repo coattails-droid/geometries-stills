@@ -1,0 +1,28 @@
+{
+  "series": "touring",
+  "name": "Touring Geometries",
+  "contract": "0x68488544434fd5c5a23198E5Ca15a3B7e8F2702C",
+  "setter": "setTokenImage(uint256[],string[])",
+  "safe": "0x851294C9bdb242Ea0448FBb9083Fd7757E4265E9",
+  "ids": [
+    3,
+    4,
+    5
+  ],
+  "folder": "touring-stills-3-5",
+  "folder_cid": "bafybeifloc56aontplbagj6cca5zqijgehfnpe4rwsqi72cpvjdqtxjuw4",
+  "uri_example": "ipfs://bafybeifloc56aontplbagj6cca5zqijgehfnpe4rwsqi72cpvjdqtxjuw4/3.png",
+  "file_cids": {
+    "3.png": "bafybeiggsqwi4zssyuncizyatduv2heb4t4o4z3j4vafxswotxo2qu6qhm",
+    "4.png": "bafybeiexayf6n2tldp7qdmtptm72gqpaizdlhrnv74ptsnkvy6hskg3yly",
+    "5.png": "bafybeieixp43n5a2n6yjm6fyh7wabdcjkkcwxqskx5pyijzzfmulfz3n6y",
+    "<root>": "bafybeifloc56aontplbagj6cca5zqijgehfnpe4rwsqi72cpvjdqtxjuw4"
+  },
+  "date": "2026-10-04",
+  "created_utc": "2026-10-04T14:46:58Z",
+  "block": "26119680",
+  "still": "frame 0 (t = 0 s of the 16 s loop), 1000x1000",
+  "chrome": "Google Chrome 154.0.8037.57 ",
+  "kubo": "0.38.1",
+  "run": "https://github.com/coattails-droid/geometries-stills/actions/runs/37210483799"
+}
