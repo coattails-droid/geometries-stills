@@ -1,0 +1,24 @@
+{
+  "series": "seeded",
+  "name": "Seeded Geometries",
+  "contract": "0xf8b604CC9108bAd6cC306B0a9F207CFb477562A7",
+  "setter": "setTokenImages(uint256[],string[])",
+  "safe": "0x851294C9bdb242Ea0448FBb9083Fd7757E4265E9",
+  "ids": [
+    11
+  ],
+  "folder": "seeded-stills-11-11",
+  "folder_cid": "bafybeiaqhhmxtwdwtzva3e3ysijxaww3oukd73y4ityxocokowkdgbu45q",
+  "uri_example": "https://gateway.pinata.cloud/ipfs/bafybeiaqhhmxtwdwtzva3e3ysijxaww3oukd73y4ityxocokowkdgbu45q/11.png",
+  "file_cids": {
+    "11.png": "bafybeib2soykvw2zaib7f4qgq3hwlw5hrwnzpzuj64csu4htmfwcyfk7qy",
+    "<root>": "bafybeiaqhhmxtwdwtzva3e3ysijxaww3oukd73y4ityxocokowkdgbu45q"
+  },
+  "date": "2026-10-04",
+  "created_utc": "2026-10-04T14:55:50Z",
+  "block": "26119724",
+  "still": "rest frame (phase 0 of the 8 s loop), 1000x1000",
+  "chrome": "Google Chrome 154.0.8037.57 ",
+  "kubo": "0.38.1",
+  "run": "https://github.com/coattails-droid/geometries-stills/actions/runs/37211043669"
+}
