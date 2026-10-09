@@ -46,5 +46,22 @@
       "size": 1000
     },
     "still_note": "rest frame (phase 0 of the 8 s loop), 1000x1000"
+  },
+  "luminous": {
+    "name": "Luminous Geometries",
+    "contract": "0xbA6D94f07B0B0a092eB1AF763A5b721a274343e6",
+    "setter": "setTokenImage(uint256[],string[])",
+    "missing_check": "tokenImage-empty",
+    "uri_prefix": "ipfs://",
+    "folder_prefix": "luminous-stills",
+    "label": "luminous-stills",
+    "capture": {
+      "mode": "perfnow",
+      "canvas_id": "c",
+      "time_ms": 0,
+      "size": 900
+    },
+    "output_size": 1000,
+    "still_note": "frame 0 (t = 0 s of the 227 s loop); canvas is fixed at 900x900 (720 x PR 1.25), Lanczos-resized to 1000x1000"
   }
 }

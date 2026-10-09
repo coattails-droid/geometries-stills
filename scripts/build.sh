@@ -5,6 +5,7 @@
 SERIES="${1:?series}"; IDS="${2:?ids}"; source "$(dirname "$0")/lib.sh"
 C=$(cfg .contract); NAME=$(cfg .name); SIG=$(cfg .setter); PREFIX=$(cfg .uri_prefix); FP=$(cfg .folder_prefix)
 MODE=$(cfg .capture.mode); CID_=$(cfg .capture.canvas_id); TMS=$(cfg .capture.time_ms); SIZE=$(cfg .capture.size); NOTE=$(cfg .still_note)
+OSIZE=$(jq -r --arg s "$SERIES" '.[$s].output_size // ""' "$ROOT/series.json")  # optional resize after capture
 IFS=, read -r -a ids <<< "$IDS"; FIRST=${ids[0]}; LAST=${ids[${#ids[@]}-1]}
 DATE=$(TZ=America/New_York date +%F)
 FOLDER="$FP-$FIRST-$LAST"; OUT="$ROOT/out/$SERIES/$DATE-$FIRST-$LAST"; WORK="$ROOT/out/$SERIES/work"
@@ -19,7 +20,7 @@ assert au.startswith('data:text/html;base64,'), au[:40]
 open(sys.argv[2],'wb').write(base64.b64decode(au.split(',',1)[1]))
 PY
   node "$ROOT/scripts/capture.js" "$WORK/html/$id.html" "$WORK/raw/$id.png" "$MODE" "$CID_" "$TMS" "$SIZE" | tee "$WORK/capture-$id.json"
-  python3 "$ROOT/scripts/flatten.py" "$WORK/raw/$id.png" "$WORK/$FOLDER/$id.png"
+  python3 "$ROOT/scripts/flatten.py" "$WORK/raw/$id.png" "$WORK/$FOLDER/$id.png" "$OSIZE"
 done
 # fail if a still is (near-)blank — means the renderer didn't draw
 python3 - "$WORK/$FOLDER" <<'PY'

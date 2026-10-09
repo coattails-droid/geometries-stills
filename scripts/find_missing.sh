@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # find_missing.sh <series> — list minted token ids that have no still set on-chain.
-#   touring: tokenImage(id) == ""                        (contract has a public tokenImage getter)
+#   touring/luminous: tokenImage(id) == ""               (contract has a public tokenImage getter)
 #   seeded/tidal: tokenURI(id).image is the on-chain SVG placeholder (data:image/svg+xml...) — _tokenImage is private
 # FORCE_IDS="1,2" skips detection and uses those ids (must be minted). Outputs: ids, count, first, last, total_supply.
 SERIES="${1:?series}"; source "$(dirname "$0")/lib.sh"
