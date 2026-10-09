@@ -1,0 +1,40 @@
+{
+  "series": "luminous",
+  "name": "Luminous Geometries",
+  "contract": "0xbA6D94f07B0B0a092eB1AF763A5b721a274343e6",
+  "setter": "setTokenImage(uint256[],string[])",
+  "safe": "0x851294C9bdb242Ea0448FBb9083Fd7757E4265E9",
+  "ids": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "folder": "luminous-stills-2-10",
+  "folder_cid": "bafybeiba6dxbsgf7xsxnmucezhqt6kcqm235ofz4pwvm24bxtahjawyx5m",
+  "uri_example": "ipfs://bafybeiba6dxbsgf7xsxnmucezhqt6kcqm235ofz4pwvm24bxtahjawyx5m/2.png",
+  "file_cids": {
+    "10.png": "bafybeiagxkwpgutywxivp4btmcqqhhyuyxlwfoajtq7yivflp4no56t5v4",
+    "2.png": "bafybeigyxxerj3vhv7ft3pcdnb2dzperk6222avmnzc27d5cz3gahtwnmm",
+    "3.png": "bafybeiaatm7wnqxarjqibt2eeescmxuugbrr6gblgjyrbtwwe5ucsnzuaq",
+    "4.png": "bafybeidsnwjp2hm5p5cpq4wc6sj23pelylbekixgweiuh7gw22qogzamty",
+    "5.png": "bafybeicseudgpr4xkjn63uf25rq3v4rkm4lcgyxohs5rghol3fjxjmvwyy",
+    "6.png": "bafybeiftodp2ifwfeg5ndm2ke44guc5hvke5mhpb4baslrgf3bpyopkdgm",
+    "7.png": "bafybeibfsarxglnazahyihjxpgcofezzcwltwwte5vtayl4o22sz4exkk4",
+    "8.png": "bafybeifelxwoqjnt7kotclj4svplsmmfe4fvruadtbjjojsovwp6cdspra",
+    "9.png": "bafybeifzlhrvqmwx22ub3ohs3zti7dqpefspos2xq73bradkfy6u555zqa",
+    "<root>": "bafybeiba6dxbsgf7xsxnmucezhqt6kcqm235ofz4pwvm24bxtahjawyx5m"
+  },
+  "date": "2026-10-09",
+  "created_utc": "2026-10-09T12:18:29Z",
+  "block": "26154800",
+  "still": "frame 0 (t = 0 s of the 227 s loop); canvas is fixed at 900x900 (720 x PR 1.25), Lanczos-resized to 1000x1000",
+  "chrome": "Google Chrome 154.0.8037.97 ",
+  "kubo": "0.38.1",
+  "run": "https://github.com/coattails-droid/geometries-stills/actions/runs/37929052273"
+}
