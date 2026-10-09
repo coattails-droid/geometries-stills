@@ -1,0 +1,24 @@
+{
+  "series": "luminous",
+  "name": "Luminous Geometries",
+  "contract": "0xbA6D94f07B0B0a092eB1AF763A5b721a274343e6",
+  "setter": "setTokenImage(uint256[],string[])",
+  "safe": "0x851294C9bdb242Ea0448FBb9083Fd7757E4265E9",
+  "ids": [
+    2
+  ],
+  "folder": "luminous-stills-2-2",
+  "folder_cid": "bafybeibcmsxty6dqqc63v5efov6h4cptitthl32u3sugtvj4sjeeyewmn4",
+  "uri_example": "ipfs://bafybeibcmsxty6dqqc63v5efov6h4cptitthl32u3sugtvj4sjeeyewmn4/2.png",
+  "file_cids": {
+    "2.png": "bafybeigyxxerj3vhv7ft3pcdnb2dzperk6222avmnzc27d5cz3gahtwnmm",
+    "<root>": "bafybeibcmsxty6dqqc63v5efov6h4cptitthl32u3sugtvj4sjeeyewmn4"
+  },
+  "date": "2026-10-09",
+  "created_utc": "2026-10-09T12:01:21Z",
+  "block": "26154717",
+  "still": "frame 0 (t = 0 s of the 227 s loop); canvas is fixed at 900x900 (720 x PR 1.25), Lanczos-resized to 1000x1000",
+  "chrome": "Google Chrome 154.0.8037.97 ",
+  "kubo": "0.38.1",
+  "run": "https://github.com/coattails-droid/geometries-stills/actions/runs/37927290238"
+}
