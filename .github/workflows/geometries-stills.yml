@@ -1,6 +1,6 @@
 name: Geometries stills
 
-# Weekdays 12:35 UTC (8:35 AM EDT / 7:35 AM EST): find minted Touring / Seeded / Tidal / Luminous Geometries tokens that still
+# Weekdays 12:35 UTC (8:35 AM EDT / 7:35 AM EST): find minted Touring / Seeded / Tidal / Luminous / Stellar Geometries tokens that still
 # show the placeholder image, render their stills from the on-chain artwork, and prepare a Safe batch + an issue.
 on:
   schedule:
@@ -10,7 +10,7 @@ on:
       series:
         description: 'Which series to check'
         type: choice
-        options: [all, touring, seeded, tidal, luminous]
+        options: [all, touring, seeded, tidal, luminous, stellar]
         default: all
       force_ids:
         description: 'Testing: render these token ids instead of detecting missing ones (e.g. "1,2"). Leave empty for normal runs.'
@@ -39,7 +39,7 @@ jobs:
       - id: p
         run: |
           s='${{ inputs.series }}'
-          if [ -z "$s" ] || [ "$s" = all ]; then echo 'series=["touring","seeded","tidal","luminous"]' >> "$GITHUB_OUTPUT"
+          if [ -z "$s" ] || [ "$s" = all ]; then echo 'series=["touring","seeded","tidal","luminous","stellar"]' >> "$GITHUB_OUTPUT"
           else echo "series=[\"$s\"]" >> "$GITHUB_OUTPUT"; fi
 
   stills:

@@ -1,6 +1,6 @@
 # geometries-stills
 
-Weekday automation that renders preview stills for new **Touring**, **Seeded**, **Tidal** and **Luminous Geometries** mints and
+Weekday automation that renders preview stills for new **Touring**, **Seeded**, **Tidal**, **Luminous** and **Stellar Geometries** mints and
 prepares the Safe batch that sets them on-chain. Everything is a public chain read, so no secrets are needed. It
 does **not** upload anything to Pinata and it never signs anything. You do those two steps yourself; the issue it
 opens tells you how.
@@ -11,8 +11,9 @@ opens tells you how.
 | Seeded Geometries | `0xf8b604CC9108bAd6cC306B0a9F207CFb477562A7` | `setTokenImages(uint256[],string[])` | `tokenURI(id).image` is the on-chain SVG placeholder | loop rest frame (phase 0), 1000×1000 | `https://gateway.pinata.cloud/ipfs/<CID>/<id>.png` |
 | Tidal Geometries | `0x9F4b042cD0D2B4B93a2b78bDa8862a2473A3485d` | `setTokenImages(uint256[],string[])` | same as Seeded | loop rest frame (phase 0), 1000×1000 | same as Seeded |
 | Luminous Geometries | `0xbA6D94f07B0B0a092eB1AF763A5b721a274343e6` | `setTokenImage(uint256[],string[])` | `tokenImage(id) == ""` | frame 0 (t = 0 s), canvas is fixed at 900×900, Lanczos-resized to 1000×1000 | `ipfs://<CID>/<id>.png` |
+| Stellar Geometries | `0xa12D8989e463F15b0F11974159855D2a16cC7E58` | `setTokenImage(uint256[],string[])` | `tokenImage(id) == ""` | frame 0 (t = 0 s of the 16 s loop), canvas fixed at 1080×1080, Lanczos-resized to 1000×1000 | `ipfs://<CID>/<id>.png` |
 
-All four contracts are owned by the Safe `0x851294C9bdb242Ea0448FBb9083Fd7757E4265E9`. Per-series settings live in
+All five contracts are owned by the Safe `0x851294C9bdb242Ea0448FBb9083Fd7757E4265E9`. Per-series settings live in
 [`series.json`](series.json). Each series matches what is already on-chain for it: the same frame, size and URI
 format. The Seeded and Tidal renders are pixel-identical to the stills already set for those tokens. Luminous #1 was set by hand
 (`ipfs://bafybeiboay6fo376f22hugfw3i5iq5ne5vvxqpcyhg3pixx4bsr3pjyy6q/1.png`), so the job skips it; the job's render of #1 is
@@ -24,7 +25,7 @@ byte-identical to that file.
 daylight time and 7:35 AM Eastern in winter. GitHub often starts scheduled runs a few minutes late, sometimes 15+
 minutes at busy times.
 
-Each run checks all four series in parallel. For each series it:
+Each run checks all five series in parallel. For each series it:
 
 1. reads `totalSupply` and finds minted ids (1…totalSupply) that have no still yet;
 2. if there are none, writes "nothing to do" in the run summary and stops. If an old issue for the series is still
@@ -60,7 +61,7 @@ The issue has the exact links and CID. In short:
 
 GitHub → **Actions** → **Geometries stills** → **Run workflow**. The inputs:
 
-- **series**: `all` (default), `touring`, `seeded`, `tidal` or `luminous`.
+- **series**: `all` (default), `touring`, `seeded`, `tidal`, `luminous` or `stellar`.
 - **force_ids**: for testing. Renders these ids (e.g. `1,2`) even if they already have a still.
 - **dry_run**: only uploads the result as a workflow artifact (no commit, no issue). Use this with `force_ids` to
   check that rendering still works. Download the artifact from the run page.

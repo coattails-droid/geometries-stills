@@ -63,5 +63,22 @@
     },
     "output_size": 1000,
     "still_note": "frame 0 (t = 0 s of the 227 s loop); canvas is fixed at 900x900 (720 x PR 1.25), Lanczos-resized to 1000x1000"
+  },
+  "stellar": {
+    "name": "Stellar Geometries",
+    "contract": "0xa12D8989e463F15b0F11974159855D2a16cC7E58",
+    "setter": "setTokenImage(uint256[],string[])",
+    "missing_check": "tokenImage-empty",
+    "uri_prefix": "ipfs://",
+    "folder_prefix": "stellar-stills",
+    "label": "stellar-stills",
+    "capture": {
+      "mode": "perfnow",
+      "canvas_id": "c",
+      "time_ms": 0,
+      "size": 1080
+    },
+    "output_size": 1000,
+    "still_note": "frame 0 (t = 0 s of the 16 s loop); canvas is fixed at 1080x1080, Lanczos-resized to 1000x1000"
   }
 }
