@@ -2,6 +2,9 @@ name: Geometries stills
 
 # Weekdays 12:35 UTC (8:35 AM EDT / 7:35 AM EST): find minted Touring / Seeded / Tidal / Luminous / Stellar Geometries tokens that still
 # show the placeholder image, render their stills from the on-chain artwork, and prepare a Safe batch + an issue.
+# Condensed 2026-10-21 (Muse takeover): the old plan job + 5-way matrix became ONE job that sets up
+# once (node/python/foundry/Chrome/kubo) and loops the series, so setup cost is paid once per run
+# instead of five times. Per-series behavior is unchanged: find -> dedupe check -> build -> commit -> issue.
 on:
   schedule:
     - cron: '35 12 * * 1-5'
@@ -31,28 +34,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  plan:
-    runs-on: ubuntu-latest
-    outputs:
-      series: ${{ steps.p.outputs.series }}
-    steps:
-      - id: p
-        run: |
-          s='${{ inputs.series }}'
-          if [ -z "$s" ] || [ "$s" = all ]; then echo 'series=["touring","seeded","tidal","luminous","stellar"]' >> "$GITHUB_OUTPUT"
-          else echo "series=[\"$s\"]" >> "$GITHUB_OUTPUT"; fi
-
   stills:
-    needs: plan
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        series: ${{ fromJSON(needs.plan.outputs.series) }}
-    name: ${{ matrix.series }}
+    timeout-minutes: 240
     env:
-      SERIES: ${{ matrix.series }}
       DRY_RUN: ${{ inputs.dry_run == true && 'true' || 'false' }}
       FORCE_IDS: ${{ inputs.force_ids }}
       GH_TOKEN: ${{ github.token }}
@@ -98,48 +83,81 @@ jobs:
           IPFS_PATH="$RUNNER_TEMP/ipfs-repo" "$RUNNER_TEMP/kubo/ipfs" init --empty-repo >/dev/null
           "$RUNNER_TEMP/kubo/ipfs" version; "$CHROME_PATH" --version; cast --version | head -1
 
-      - name: Find tokens without a still
-        id: find
-        run: ./scripts/find_missing.sh "$SERIES"
-
-      - name: Check open issues (dedupe)
-        id: check
-        if: env.DRY_RUN != 'true'
-        run: ./scripts/issues.sh check "$SERIES" "${{ steps.find.outputs.ids }}"
-
-      - name: Render stills, zip, CID, Safe batch, simulate, contact sheet
-        id: build
-        if: steps.find.outputs.count != '0' && (env.DRY_RUN == 'true' || steps.check.outputs.action == 'build')
-        env:
-          BLOCK: ${{ steps.find.outputs.block }}
-        run: ./scripts/build.sh "$SERIES" "${{ steps.find.outputs.ids }}"
-
-      - name: Upload artifact
-        if: steps.build.outcome == 'success'
-        uses: actions/upload-artifact@v7
-        with:
-          name: ${{ matrix.series }}-${{ steps.build.outputs.date }}-${{ steps.build.outputs.first }}-${{ steps.build.outputs.last }}${{ env.DRY_RUN == 'true' && '-dryrun' || '' }}
-          path: ${{ steps.build.outputs.dir }}
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Commit batch to the repo
-        id: commit
-        if: steps.build.outcome == 'success' && env.DRY_RUN != 'true'
+      - name: Find, build, commit and open issues (per series)
+        id: loop
         run: |
-          DEST="batches/$SERIES/$(basename "${{ steps.build.outputs.dir }}")"
-          rm -rf "$DEST"; mkdir -p "$DEST"; cp -r "${{ steps.build.outputs.dir }}"/. "$DEST"/
+          STEP_OUT="$GITHUB_OUTPUT"
+          case '${{ inputs.series }}' in
+            ''|all) SERIES_LIST="touring seeded tidal luminous stellar" ;;
+            *) SERIES_LIST='${{ inputs.series }}' ;;
+          esac
+          echo "Series this run: $SERIES_LIST"
+          ART="$RUNNER_TEMP/artifacts"; mkdir -p "$ART"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$DEST"
-          git commit -m "$SERIES stills $(basename "$DEST") (CID ${{ steps.build.outputs.cid }})"
-          for i in 1 2 3 4 5; do git push origin HEAD:${{ github.ref_name }} && break; sleep $((i*5)); git pull --rebase origin ${{ github.ref_name }}; done
-          git fetch origin ${{ github.ref_name }}; git merge-base --is-ancestor HEAD FETCH_HEAD || { echo "::error::push failed"; exit 1; }
-          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"; echo "dest=$DEST" >> "$GITHUB_OUTPUT"
+          FAILED=""; BUILT=0
+          get_out() { grep "^$2=" "$1" 2>/dev/null | tail -1 | cut -d= -f2- || true; }
+          for S in $SERIES_LIST; do
+            echo "::group::$S"
+            export SERIES="$S"
+            OUT_F="$RUNNER_TEMP/ghout-$S.txt"; : > "$OUT_F"; export GITHUB_OUTPUT="$OUT_F"
+            if ! ./scripts/find_missing.sh "$S"; then
+              echo "::error::$S: find_missing failed"; FAILED="$FAILED $S(find)"; echo "::endgroup::"; continue
+            fi
+            ids=$(get_out "$OUT_F" ids); count=$(get_out "$OUT_F" count)
+            block=$(get_out "$OUT_F" block); supply=$(get_out "$OUT_F" total_supply)
+            action=build
+            if [ "$DRY_RUN" != "true" ]; then
+              if ! ./scripts/issues.sh check "$S" "$ids"; then
+                echo "::error::$S: issues check failed"; FAILED="$FAILED $S(check)"; echo "::endgroup::"; continue
+              fi
+              action=$(get_out "$OUT_F" action); action=${action:-build}
+            fi
+            if [ "${count:-0}" != "0" ] && { [ "$DRY_RUN" = "true" ] || [ "$action" = "build" ]; }; then
+              if ! BLOCK="$block" ./scripts/build.sh "$S" "$ids"; then
+                echo "::error::$S: build failed"; FAILED="$FAILED $S(build)"; echo "::endgroup::"; continue
+              fi
+              bdate=$(get_out "$OUT_F" date); bfirst=$(get_out "$OUT_F" first); blast=$(get_out "$OUT_F" last)
+              bdir=$(get_out "$OUT_F" dir); bcid=$(get_out "$OUT_F" cid); bfolder=$(get_out "$OUT_F" folder)
+              bzip=$(get_out "$OUT_F" zip); bbatch=$(get_out "$OUT_F" batch)
+              stage="$ART/$S-$bdate-$bfirst-$blast"; if [ "$DRY_RUN" = "true" ]; then stage="$stage-dryrun"; fi
+              mkdir -p "$stage"; cp -r "$bdir"/. "$stage"/
+              BUILT=$((BUILT+1))
+              if [ "$DRY_RUN" != "true" ]; then
+                DEST="batches/$S/$(basename "$bdir")"
+                rm -rf "$DEST"; mkdir -p "$DEST"; cp -r "$bdir"/. "$DEST"/
+                git add "$DEST"
+                if git commit -m "$S stills $(basename "$DEST") (CID $bcid)"; then
+                  ok=""
+                  for i in 1 2 3 4 5; do
+                    if git push origin HEAD:${{ github.ref_name }}; then ok=1; break; fi
+                    sleep $((i*5)); git pull --rebase origin ${{ github.ref_name }} || true
+                  done
+                  git fetch origin ${{ github.ref_name }}
+                  if [ -n "$ok" ] && git merge-base --is-ancestor HEAD FETCH_HEAD; then
+                    sha=$(git rev-parse HEAD)
+                    if ! ./scripts/issues.sh open "$S" "$ids" "$bcid" "$bfolder" "$DEST" "$sha" "$bzip" "$bbatch" "$block" "$supply"; then
+                      echo "::error::$S: issue open failed"; FAILED="$FAILED $S(issue)"
+                    fi
+                  else
+                    echo "::error::$S: push failed"; FAILED="$FAILED $S(push)"
+                  fi
+                else
+                  echo "::error::$S: commit failed"; FAILED="$FAILED $S(commit)"
+                fi
+              fi
+            fi
+            echo "::endgroup::"
+          done
+          echo "built_count=$BUILT" >> "$STEP_OUT"
+          if [ -n "$FAILED" ]; then echo "::error::Failed series:$FAILED"; exit 1; fi
+          echo "Done. Built $BUILT batch(es)."
 
-      - name: Open issue
-        if: steps.commit.outcome == 'success'
-        run: |
-          ./scripts/issues.sh open "$SERIES" "${{ steps.find.outputs.ids }}" "${{ steps.build.outputs.cid }}" \
-            "${{ steps.build.outputs.folder }}" "${{ steps.commit.outputs.dest }}" "${{ steps.commit.outputs.sha }}" \
-            "${{ steps.build.outputs.zip }}" "${{ steps.build.outputs.batch }}" "${{ steps.find.outputs.block }}" "${{ steps.find.outputs.total_supply }}"
+      - name: Upload artifacts
+        if: ${{ !cancelled() && steps.loop.outputs.built_count != '0' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: geometries-stills-${{ github.run_id }}${{ inputs.dry_run == true && '-dryrun' || '' }}
+          path: ${{ runner.temp }}/artifacts
+          if-no-files-found: error
+          retention-days: 30
